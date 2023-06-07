@@ -1,28 +1,16 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail import VERSION as WAGTAIL_VERSION
-from wagtail.contrib.settings.models import BaseSetting, register_setting
+from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel as ImageChooserPanel
+from wagtail.admin.panels import InlinePanel, MultiFieldPanel, PageChooserPanel
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.images import get_image_model_string
-
-if WAGTAIL_VERSION >= (3, 0):
-    from wagtail.admin.panels import (FieldPanel, InlinePanel, MultiFieldPanel,
-                                      PageChooserPanel)
-    from wagtail.models import Orderable
-    from wagtail.admin.panels import FieldPanel as ImageChooserPanel
-else:
-    from wagtail.admin.edit_handlers import (
-        FieldPanel,
-        InlinePanel,
-        MultiFieldPanel,
-        PageChooserPanel,
-    )
-    from wagtail.core.models import Orderable
-    from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.models import Orderable
 
 
 @register_setting
-class HeaderSettings(ClusterableModel, BaseSetting):
+class HeaderSettings(ClusterableModel, BaseSiteSetting):
     service_name = models.CharField(max_length=255, blank=True)
     service_long_name = models.BooleanField(default=False)
     service_link = models.ForeignKey(
@@ -107,7 +95,7 @@ class NavigationLink(Orderable):
 
 
 @register_setting
-class FooterSettings(ClusterableModel, BaseSetting):
+class FooterSettings(ClusterableModel, BaseSiteSetting):
 
     panels = [
         InlinePanel(
